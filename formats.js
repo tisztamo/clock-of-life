@@ -506,7 +506,7 @@ var formats = (function()
             {
                 const is_empty = !life.get_bit(x, y);
                 const run_length = x - run_start;
-                console.assert(run_length >= 0);
+                //console.assert(run_length >= 0);
 
                 if(state_is_empty !== is_empty)
                 {
