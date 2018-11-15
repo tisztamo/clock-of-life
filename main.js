@@ -291,6 +291,10 @@ var
                 {
                     //console.profile("main setup");
                     setup_pattern(text, pattern_parameter);
+
+                    clock.init(life, drawer, setup_pattern);
+                    clock.run(update_hud);
+
                     //console.profileEnd("main setup");
                 },
                 function()

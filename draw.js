@@ -24,6 +24,7 @@ function LifeCanvasDrawer()
         // in pixels
         border_width,
         cell_color_rgb,
+        int_cell_color,
 
         drawer = this;
 
@@ -85,10 +86,10 @@ function LifeCanvasDrawer()
 
     function draw_node(node, size, left, top)
     {
-        if(node.population === 0)
+        /*if(node.population === 0)
         {
             return;
-        }
+        }*/
 
         if(
             left + size + canvas_offset_x < 0 ||
@@ -118,15 +119,19 @@ function LifeCanvasDrawer()
         {
             size /= 2;
 
-            draw_node(node.nw, size, left, top);
-            draw_node(node.ne, size, left + size, top);
-            draw_node(node.sw, size, left, top + size);
-            draw_node(node.se, size, left + size, top + size);
+            node.nw.population && draw_node(node.nw, size, left, top);
+            node.ne.population && draw_node(node.ne, size, left + size, top);
+            node.sw.population && draw_node(node.sw, size, left, top + size);
+            node.se.population && draw_node(node.se, size, left + size, top + size);
         }
     }
 
     function fill_square(x, y, size)
     {
+        if (size === 1) {
+            image_data_data[x + y * canvas_width] = int_cell_color;
+            return;
+        }
         var width = size - border_width,
             height = width;
 
@@ -157,21 +162,16 @@ function LifeCanvasDrawer()
             return;
         }
 
-        var pointer = x + y * canvas_width,
-            row_width = canvas_width - width;
-
-        //console.assert(x >= 0 && y >= 0 && x + width <= canvas_width && y + height <= canvas_height);
-        var color = cell_color_rgb.r | cell_color_rgb.g << 8 | cell_color_rgb.b << 16 | 0xFF << 24;
+        var row_start = x + y * canvas_width;
 
         for(var i = 0; i < height; i++)
         {
-            for(var j = 0; j < width; j++)
+            var row_end = row_start + width;
+            for(var pointer = row_start; pointer < row_end; pointer++)
             {
-                image_data_data[pointer] = color;
-
-                pointer++;
+                image_data_data[pointer] = int_cell_color;
             }
-            pointer += row_width;
+            row_start = row_start + canvas_width;
         }
     }
 
@@ -183,13 +183,11 @@ function LifeCanvasDrawer()
 
         border_width = drawer.border_width * drawer.cell_width | 0;
         cell_color_rgb = color2rgb(drawer.cell_color);
+        int_cell_color = cell_color_rgb.r | cell_color_rgb.g << 8 | cell_color_rgb.b << 16 | 0xFF << 24;
 
         var count = canvas_width * canvas_height;
 
-        for(var i = 0; i < count; i++)
-        {
-            image_data_data[i] = bg_color_int;
-        }
+       image_data_data.fill(bg_color_int);
 
         var size = Math.pow(2, node.level - 1) * drawer.cell_width;
 
@@ -207,12 +205,12 @@ function LifeCanvasDrawer()
         var old_cell_width = drawer.cell_width;
         if(out)
         {
-            drawer.cell_width /= 1.1;
             if (drawer.cell_width > 1) {
-                drawer.cell_width = 1;
+                drawer.cell_width /= 2;
                 canvas_offset_x -= Math.round((canvas_offset_x - center_x) / 2);
                 canvas_offset_y -= Math.round((canvas_offset_y - center_y) / 2);
             } else {
+                drawer.cell_width /= 1.1;
                 canvas_offset_x -= Math.round((canvas_offset_x - center_x) * (old_cell_width / drawer.cell_width- 1));
                 canvas_offset_y -= Math.round((canvas_offset_y - center_y) * (old_cell_width / drawer.cell_width - 1));
             }
@@ -221,18 +219,20 @@ function LifeCanvasDrawer()
         else
         {
             if (drawer.cell_width >= 2) {
-                return;
-            }
-            drawer.cell_width *= 1.1;
-            if (drawer.cell_width > 1) {
-                drawer.cell_width = 2;
+                drawer.cell_width *= 2;
                 canvas_offset_x += Math.round((canvas_offset_x - center_x));
                 canvas_offset_y += Math.round((canvas_offset_y - center_y));
             } else {
-                canvas_offset_x += Math.round((canvas_offset_x - center_x) * (1 - old_cell_width / drawer.cell_width));
-                canvas_offset_y += Math.round((canvas_offset_y - center_y) * (1 - old_cell_width / drawer.cell_width));
+                drawer.cell_width *= 1.1;
+                if (drawer.cell_width > 1) {
+                    drawer.cell_width = 2;
+                    canvas_offset_x += Math.round((canvas_offset_x - center_x));
+                    canvas_offset_y += Math.round((canvas_offset_y - center_y));
+                } else {
+                    canvas_offset_x += Math.round((canvas_offset_x - center_x) * (1 - old_cell_width / drawer.cell_width));
+                    canvas_offset_y += Math.round((canvas_offset_y - center_y) * (1 - old_cell_width / drawer.cell_width));
+                }
             }
-
         }
     }
 
