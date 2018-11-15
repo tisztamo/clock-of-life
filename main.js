@@ -1083,7 +1083,7 @@ var
     function reset_settings()
     {
         drawer.background_color = "#000000";
-        drawer.cell_color = "#cccccc";
+        drawer.cell_color = "#ff0000";
 
         drawer.border_width = DEFAULT_BORDER;
         drawer.cell_width = 2;
@@ -1222,13 +1222,23 @@ var
             life.save_rewind_state();
         }
 
-        interval = setInterval(function()
+       /* interval = setInterval(function()
         {
             update_hud(1000 / frame_time);
-        }, 666);
+        }, 666);*/
 
-        start = Date.now();
         last_frame = start - per_frame;
+
+        var step = 8;
+        life.set_step(3);
+
+        var CLOCK_PERIOD = 11520;
+        var msecs_per_frame = 60000 / (CLOCK_PERIOD / step);
+        var frameIdx = 0;
+        var goal = 0;
+        var last_time = Date.now() - 1;
+        var fps = 0;
+
 
         function update()
         {
@@ -1244,27 +1254,22 @@ var
             }
 
             var time = Date.now();
+            var elapsed = time - start;
 
-            if(per_frame * n < (time - start))
-            {
+            if (elapsed >= goal) {
                 life.next_generation(true);
                 drawer.redraw(life.root);
-
-                n++;
-
-                // readability ... my ass
-                frame_time += (-last_frame - frame_time + (last_frame = time)) / 15;
-
-                if(frame_time < .7 * per_frame)
-                {
-                    n = 1;
-                    start = Date.now();
-                }
+                fps = 0.99 * fps + 0.01 * (1000 / (time - last_time))
+                update_hud(fps);
+                frameIdx += 1;
+                goal = frameIdx * msecs_per_frame;
+                last_time = time;
             }
 
             nextFrame(update);
         }
 
+        start = Date.now();
         update();
     }
 

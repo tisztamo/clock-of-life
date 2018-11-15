@@ -1,0 +1,26 @@
+{
+  "name": "clock-of-life",
+  "version": "1.0.0",
+  "description": "life ====",
+  "main": "main.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "ws"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tisztamo/clock-of-life.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tisztamo/clock-of-life/issues"
+  },
+  "homepage": "https://github.com/tisztamo/clock-of-life#readme",
+  "devDependencies": {
+    "local-web-server": "^2.6.0"
+  }
+}

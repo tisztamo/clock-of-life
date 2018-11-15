@@ -204,19 +204,35 @@ function LifeCanvasDrawer()
      */
     function zoom(out, center_x, center_y)
     {
+        var old_cell_width = drawer.cell_width;
         if(out)
         {
-            canvas_offset_x -= Math.round((canvas_offset_x - center_x) / 2);
-            canvas_offset_y -= Math.round((canvas_offset_y - center_y) / 2);
+            drawer.cell_width /= 1.1;
+            if (drawer.cell_width > 1) {
+                drawer.cell_width = 1;
+                canvas_offset_x -= Math.round((canvas_offset_x - center_x) / 2);
+                canvas_offset_y -= Math.round((canvas_offset_y - center_y) / 2);
+            } else {
+                canvas_offset_x -= Math.round((canvas_offset_x - center_x) * (old_cell_width / drawer.cell_width- 1));
+                canvas_offset_y -= Math.round((canvas_offset_y - center_y) * (old_cell_width / drawer.cell_width - 1));
+            }
 
-            drawer.cell_width /= 2;
         }
         else
         {
-            canvas_offset_x += Math.round(canvas_offset_x - center_x);
-            canvas_offset_y += Math.round(canvas_offset_y - center_y);
+            if (drawer.cell_width >= 2) {
+                return;
+            }
+            drawer.cell_width *= 1.1;
+            if (drawer.cell_width > 1) {
+                drawer.cell_width = 2;
+                canvas_offset_x += Math.round((canvas_offset_x - center_x));
+                canvas_offset_y += Math.round((canvas_offset_y - center_y));
+            } else {
+                canvas_offset_x += Math.round((canvas_offset_x - center_x) * (1 - old_cell_width / drawer.cell_width));
+                canvas_offset_y += Math.round((canvas_offset_y - center_y) * (1 - old_cell_width / drawer.cell_width));
+            }
 
-            drawer.cell_width *= 2;
         }
     }
 
