@@ -1,4 +1,5 @@
 const CLOCK_PERIOD = 11520;
+const FULL_DAY_GEN = 24 * 60 * CLOCK_PERIOD;
 var life;
 var drawer;
 var setup_pattern;
@@ -68,10 +69,18 @@ function clearHash() {
     console.log("Rewrite time: " + (Date.now() - ts1))
 }
 
+let start;
+let frameIdx = 0;
+let currentGen = 12 * 60 * CLOCK_PERIOD // The starting position of the clock is noon
+    - (24000 - CLOCK_PERIOD); // and the first signal arrives at the display after some time
+let fps = 0;
+let lastTs = 0
+
 let step = 1;
 let log_step = 0;
 let msecs_per_frame;
-let targetStep = 0;
+let targetGen = 0;
+
 
 function setStep(new_log_step) {
     if (log_step !== new_log_step) {
@@ -83,16 +92,16 @@ function setStep(new_log_step) {
     }
 }
 
-function calculateTargetStep() {
+function calculateTargetGen() {
     const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(12);
-    midnight.setMinutes(0);
-    midnight.setSeconds(0);
-    midnight.setMilliseconds(0);
-    const targetMsecs = now - midnight;
-    targetStep = targetMsecs / (60000 / CLOCK_PERIOD);
-    return targetStep;
+    targetGen = Math.round(now.getHours() * (CLOCK_PERIOD * 60)
+        + now.getMinutes() * CLOCK_PERIOD
+        + now.getSeconds() * CLOCK_PERIOD / 60
+        + now.getMilliseconds() * CLOCK_PERIOD / 60000);
+    while (currentGen > targetGen + FULL_DAY_GEN) {
+        currentGen -= FULL_DAY_GEN;
+    }
+    return targetGen;
 }
 
 var gc_counter = 0;
@@ -122,40 +131,37 @@ function updateStep(lag) {
     }
 }
 
-function run(update_hud)
+function updateFps(time) {
+    fps = 0.99 * fps + 0.01 * (1000 / (time - lastTs))
+    update_hud(fps);
+    lastTs = time;
+}
+
+function nextFrame() {
+    frameIdx += 1;
+    currentGen += step;
+}
+
+function update()
 {
-    let start;
-    let frameIdx = 0;
-    let totalSteps = 0;
-    let fps = 0;
-    let lastTs = 0
-
-    function updateFps(time) {
-        fps = 0.99 * fps + 0.01 * (1000 / (time - lastTs))
-        update_hud(fps);
-        lastTs = time;
+    const time = Date.now();
+    calculateTargetGen();
+    const lag = (targetGen - currentGen) * msecs_per_frame;
+    if (lag > 10) {
+        updateStep(lag);
+        life.next_generation(true);
+        nextFrame();
+        drawer.redraw(life.root);
+        updateFps(time);
+        leakWorkaround();
     }
+}
 
-    function nextFrame() {
-        frameIdx += 1;
-        totalSteps += step;
-    }
+var update_hud;
 
-    function update()
-    {
-        const time = Date.now();
-        calculateTargetStep();
-        const lag = (targetStep - totalSteps) * msecs_per_frame;
-        if (lag > 10) {
-            updateStep(lag);
-            life.next_generation(true);
-            nextFrame();
-            drawer.redraw(life.root);
-            updateFps(time);
-            leakWorkaround();
-        }
-    }
-
+function run(update_hud_)
+{
+    update_hud = update_hud_;
     start = Date.now();
     setStep(5);
     nextFrame();
