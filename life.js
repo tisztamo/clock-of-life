@@ -6,7 +6,7 @@ var
     /** @const */
     INITIAL_SIZE = 16,
     /** @const */
-    HASHMAP_LIMIT = 24,
+    HASHMAP_LIMIT = 22,
 
     /** @const */
     MASK_LEFT = 1,
@@ -382,7 +382,7 @@ LifeUniverse.prototype.garbage_collect = function()
     if(this.hashmap_size < (1 << HASHMAP_LIMIT) - 1)
     {
         this.hashmap_size = this.hashmap_size << 1 | 1;
-        this.hashmap = [];
+        //this.hashmap = [];
     }
 
     this.max_load = this.hashmap_size * LOAD_FACTOR | 0;

@@ -86,7 +86,7 @@ function setStep(new_log_step) {
 function calculateTargetStep() {
     const now = new Date();
     const midnight = new Date();
-    midnight.setHours(0);
+    midnight.setHours(12);
     midnight.setMinutes(0);
     midnight.setSeconds(0);
     midnight.setMilliseconds(0);
@@ -103,19 +103,21 @@ function leakWorkaround() {
     };
 }
 
-let stepUpdateCounter = 0;
+let smoothedLag = 0;
+let skipStepUpdates = 200;
 function updateStep(lag) {
-    stepUpdateCounter += 1;
-    if (stepUpdateCounter > 0) {
-        stepUpdateCounter = 0;
-        const stepLag = lag / (60000 / CLOCK_PERIOD);
-        const xx =  stepLag / (20 * step);
-        let targetLogStep = Math.round(Math.log2(xx)) + 2;
-        targetLogStep = Math.max(5, Math.min(targetLogStep, 16))
-        if (targetLogStep > log_step) {
-            setStep(log_step + 1)
-        } else if (targetLogStep < log_step) {
-            setStep(targetLogStep);
+    smoothedLag = 0.98 * smoothedLag + 0.02 * lag;
+    if (lag < (CLOCK_PERIOD / 12 + step) * msecs_per_frame) {
+        setStep(5);
+        skipStepUpdates = 1000;
+    }
+    if (--skipStepUpdates <= 0) {
+        if (smoothedLag > CLOCK_PERIOD / 12 && smoothedLag < 8000) {
+            setStep(6);
+            skipStepUpdates = 500;
+        } else if (smoothedLag > 8000) {
+            setStep(13);
+            skipStepUpdates = 500;
         }
     }
 }
