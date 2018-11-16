@@ -1,23 +1,6 @@
-/*
- * TODO:
- * - export patterns
- * - remember settings in the hash or offer link
- * - life 1.05 is currently broken
- * - better mobile handling: allow drawing
- * - jump to coordinate
- * - make screenshots, maybe gifs
- * - allow people to upload patterns
- * - maybe more than 2 states (non-life)
- * - implement mcell import for huge patterns
- * - fail-safe http requests and pattern parsing
- * - restore meta life
- * - error when zooming while pattern is loading
- * - run http://copy.sh/life/?pattern=demonoid_synth without crashing (improve memory efficiency)
- * - some patterns break randomly (hard to reproduce, probably related to speed changing)
- */
-
 "use strict";
 
+import * as clock from "./clock.js"
 
 var
     /** @const */
