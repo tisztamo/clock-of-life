@@ -78,7 +78,7 @@ let lastTs = 0
 
 let step = 1;
 let log_step = 0;
-let msecs_per_frame;
+let msecsPerGen = 60000 / CLOCK_PERIOD;
 let targetGen = 0;
 
 
@@ -86,7 +86,6 @@ function setStep(new_log_step) {
     if (log_step !== new_log_step) {
         life.set_step(new_log_step);
         step = Math.pow(2, new_log_step);
-        msecs_per_frame = 60000 / (CLOCK_PERIOD / step);
         log_step = new_log_step;
         console.log("Step: " + log_step);
     }
@@ -94,12 +93,13 @@ function setStep(new_log_step) {
 
 function calculateTargetGen() {
     const now = new Date();
-    targetGen = Math.round(now.getHours() * (CLOCK_PERIOD * 60)
+    let hours = now.getHours();
+    targetGen = Math.round(hours * (CLOCK_PERIOD * 60)
         + now.getMinutes() * CLOCK_PERIOD
         + now.getSeconds() * CLOCK_PERIOD / 60
         + now.getMilliseconds() * CLOCK_PERIOD / 60000);
-    while (currentGen > targetGen + FULL_DAY_GEN) {
-        currentGen -= FULL_DAY_GEN;
+    if (targetGen > FULL_DAY_GEN) {
+        targetGen -= FULL_DAY_GEN;
     }
     return targetGen;
 }
@@ -115,16 +115,18 @@ function leakWorkaround() {
 let smoothedLag = 0;
 let skipStepUpdates = 200;
 function updateStep(lag) {
-    smoothedLag = 0.98 * smoothedLag + 0.02 * lag;
-    if (lag < (CLOCK_PERIOD / 12 + step) * msecs_per_frame) {
+    const lagSize = Math.abs(lag);
+    smoothedLag = 0.98 * smoothedLag + 0.02 * lagSize;
+    if (lagSize <= step * msecsPerGen) {
         setStep(5);
-        skipStepUpdates = 1000;
+        smoothedLag = 0;
+        skipStepUpdates = 200;
     }
     if (--skipStepUpdates <= 0) {
-        if (smoothedLag > CLOCK_PERIOD / 12 && smoothedLag < 8000) {
+        if (smoothedLag > CLOCK_PERIOD / 12 * msecsPerGen && smoothedLag < 60000) {
             setStep(6);
             skipStepUpdates = 500;
-        } else if (smoothedLag > 8000) {
+        } else if (smoothedLag > 60000) {
             setStep(13);
             skipStepUpdates = 500;
         }
@@ -140,14 +142,17 @@ function updateFps(time) {
 function nextFrame() {
     frameIdx += 1;
     currentGen += step;
+    if (currentGen >= FULL_DAY_GEN) {
+        currentGen -= FULL_DAY_GEN;
+    }
 }
 
 function update()
 {
     const time = Date.now();
     calculateTargetGen();
-    const lag = (targetGen - currentGen) * msecs_per_frame;
-    if (lag > 10) {
+    const lag = (targetGen - currentGen) * msecsPerGen;
+    if (lag > 10 || lag < -90000) {
         updateStep(lag);
         life.next_generation(true);
         nextFrame();
@@ -165,7 +170,7 @@ function run(update_hud_)
     start = Date.now();
     setStep(5);
     nextFrame();
-    setInterval(update, 1000 / 7);
+    setInterval(update, 1000 / 12.2);
     update();
 }
 
