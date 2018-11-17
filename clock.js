@@ -167,11 +167,32 @@ var update_hud;
 function run(update_hud_)
 {
     update_hud = update_hud_;
+    initUi();
     start = Date.now();
     setStep(5);
     nextFrame();
     setInterval(update, 1000 / 12.2);
     update();
+}
+
+//TODO find a place for ui
+let uiInited = false;
+let mouseActiveTimeout;
+let noMouseCheckTimout = 0;
+function initUi() {
+    if (uiInited) {
+        return;
+    }
+    uiInited = true;
+    window.addEventListener("mousemove", () => {
+        if (noMouseCheckTimout) {
+            return;
+        }
+        document.body.classList.add("mouseactive");
+        clearTimeout(mouseActiveTimeout);
+        mouseActiveTimeout = setTimeout(() => document.body.classList.remove("mouseactive"), 6000);
+        noMouseCheckTimout = setTimeout(() => noMouseCheckTimout = 0, 1000);
+    })
 }
 
 export { init, run }

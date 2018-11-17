@@ -222,3 +222,11 @@ br.clear {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.kioskmouse {
+    display: none;
+}
+
+body.mouseactive .kioskmouse {
+    display: block;
+}

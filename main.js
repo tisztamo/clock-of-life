@@ -308,9 +308,9 @@ var
             hide_element($("notice"));
             hide_overlay();
 
-            show_element($("toolbar"));
-            show_element($("statusbar"));
-            show_element($("about_main"));
+            //show_element($("toolbar"));
+            //show_element($("statusbar"));
+            //show_element($("about_main"));
 
             var style_element = document.createElement("style");
             document.head.appendChild(style_element);
