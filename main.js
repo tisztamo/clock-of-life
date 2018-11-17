@@ -1051,8 +1051,8 @@ var
 
         last_frame = start - per_frame;
 
-        var step = 8;
-        life.set_step(3);
+        var step = 64;
+        life.set_step(6);
 
         var CLOCK_PERIOD = 11520;
         var msecs_per_frame = 60000 / (CLOCK_PERIOD / step);
