@@ -2,11 +2,11 @@
 
 var
     /** @const */
-    LOAD_FACTOR = .9,
+    LOAD_FACTOR = .99,
     /** @const */
-    INITIAL_SIZE = 16,
+    INITIAL_SIZE = 23,
     /** @const */
-    HASHMAP_LIMIT = 22,
+    HASHMAP_LIMIT = 23,
 
     /** @const */
     MASK_LEFT = 1,
@@ -373,11 +373,11 @@ LifeUniverse.prototype.next_generation = function(is_single)
 LifeUniverse.prototype.garbage_collect = function()
 {
     //document.getElementById("pattern_name").textContent = last_id + " / " + (last_id / hashmap_size).toFixed(5);
-    //console.log("entries: " + this.last_id);
-    //console.log("load factor: " + this.last_id / this.hashmap_size);
+    console.log("entries: " + this.last_id);
+    console.log("load factor: " + this.last_id / this.hashmap_size);
 
-    //console.log("collecting garbage ...");
-    //var t = Date.now();
+    console.log("collecting garbage ...");
+    var t = Date.now();
 
     if(this.hashmap_size < (1 << HASHMAP_LIMIT) - 1)
     {
@@ -394,11 +394,11 @@ LifeUniverse.prototype.garbage_collect = function()
     this.last_id = 4;
     this.node_hash(this.root);
 
-    //console.log("new entries: " + this.last_id);
-    //console.log("population: " + this.root.population);
-    //console.log("new hashmap size: " + this.hashmap_size);
-    //console.log("GC done in " + (Date.now() - t));
-    //console.log("size: " + hashmap.reduce(function(a, x) { return a + (x !== undefined); }, 0));
+    console.log("new entries: " + this.last_id);
+    console.log("population: " + this.root.population);
+    console.log("new hashmap size: " + this.hashmap_size);
+    console.log("GC done in " + (Date.now() - t));
+    console.log("size: " + this.hashmap.reduce(function(a, x) { return a + (x !== undefined); }, 0));
 };
 
 // the hash function used for the hashmap

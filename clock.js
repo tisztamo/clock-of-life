@@ -51,7 +51,6 @@ function clearHash() {
         array[(y - top) * width + x - left] = 1;
     });
     var ts1 = Date.now();
-    console.log("Read time: " + (ts1 - ts))
     life.clear_pattern();
     life.save_rewind_state();
 
@@ -66,7 +65,7 @@ function clearHash() {
             idx += 1;
         }
     }
-    console.log("Rewrite time: " + (Date.now() - ts1))
+    consloe.log("Hash cleanup forced in " + (ts1 - ts) + " (read) + " + (Date.now() - ts1) + " (write) ms.");
 }
 
 let start;
@@ -106,7 +105,7 @@ function calculateTargetGen() {
 
 var gc_counter = 0;
 function leakWorkaround() {
-    if (++gc_counter > 5000) {
+    if (++gc_counter > 25000) {
         gc_counter = 0;
         clearHash();
     };
