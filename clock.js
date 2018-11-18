@@ -1,8 +1,23 @@
+import { initUi } from "./demo_ui.js";
+
 const CLOCK_PERIOD = 11520;
 const FULL_DAY_GEN = 24 * 60 * CLOCK_PERIOD;
 var life;
 var drawer;
 var setup_pattern;
+
+var clockState = {
+    mode: "auto",
+
+    toManual: function() {
+        this.mode = "manual";
+        setStep(0);
+    },
+    toAuto: function() {
+        this.mode = "auto";
+        setStep(6);
+    }
+}
 
 function init(_life, _drawer, _setup_pattern) {
     life = _life;
@@ -114,6 +129,10 @@ function leakWorkaround() {
 let smoothedLag = 0;
 let skipStepUpdates = 200;
 function updateStep(lag) {
+    --skipStepUpdates;
+    if (clockState.mode !== "auto") {
+        return;
+    }
     const lagSize = Math.abs(lag);
     smoothedLag = 0.98 * smoothedLag + 0.02 * lagSize;
     if (lagSize <= step * msecsPerGen) {
@@ -121,7 +140,7 @@ function updateStep(lag) {
         smoothedLag = 0;
         skipStepUpdates = 200;
     }
-    if (--skipStepUpdates <= 0) {
+    if (skipStepUpdates <= 0) {
         if (smoothedLag > CLOCK_PERIOD / 12 * msecsPerGen && smoothedLag < 60000) {
             setStep(6);
             skipStepUpdates = 500;
@@ -166,32 +185,12 @@ var update_hud;
 function run(update_hud_)
 {
     update_hud = update_hud_;
-    initUi();
+    initUi(clockState);
     start = Date.now();
     setStep(5);
     nextFrame();
     setInterval(update, 1000 / 12.2);
     update();
-}
-
-//TODO find a place for ui
-let uiInited = false;
-let mouseActiveTimeout;
-let noMouseCheckTimout = 0;
-function initUi() {
-    if (uiInited) {
-        return;
-    }
-    uiInited = true;
-    window.addEventListener("mousemove", () => {
-        if (noMouseCheckTimout) {
-            return;
-        }
-        document.body.classList.add("mouseactive");
-        clearTimeout(mouseActiveTimeout);
-        mouseActiveTimeout = setTimeout(() => document.body.classList.remove("mouseactive"), 6000);
-        noMouseCheckTimout = setTimeout(() => noMouseCheckTimout = 0, 1000);
-    })
 }
 
 export { init, run }

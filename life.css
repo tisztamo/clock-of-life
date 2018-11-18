@@ -230,3 +230,32 @@ br.clear {
 body.mouseactive .kioskmouse {
     display: block;
 }
+
+
+/* ------------------------ */
+
+
+button {
+    margin: 3px;
+}
+
+.controls {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+}
+.controls .manual_control, .controls .auto_control {
+    display: none;
+}
+
+.controls.manual .manual_control {
+    display: block;
+}
+
+.controls.auto .auto_control {
+    display: block;
+}
+
+button.table {
+    width: 25px;
+}
