@@ -80,7 +80,7 @@ function clearHash() {
             idx += 1;
         }
     }
-    consloe.log("Hash cleanup forced in " + (ts1 - ts) + " (read) + " + (Date.now() - ts1) + " (write) ms.");
+    console.log("Hash cleanup forced in " + (ts1 - ts) + " (read) + " + (Date.now() - ts1) + " (write) ms.");
 }
 
 let start;
@@ -120,7 +120,7 @@ function calculateTargetGen() {
 
 var gc_counter = 0;
 function leakWorkaround() {
-    if (++gc_counter > 25000) {
+    if (++gc_counter > 50000) {
         gc_counter = 0;
         clearHash();
     };
