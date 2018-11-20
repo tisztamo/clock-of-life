@@ -54,7 +54,7 @@ var
          * path to the folder with all patterns
          * @const
          */
-        pattern_path = "examples/",
+        pattern_path = "patterns/",
 
         loaded = false,
 
@@ -765,7 +765,7 @@ var
                 if(false)
                 {
                     var frame = document.createElement("iframe");
-                    frame.src = "examples/";
+                    frame.src = "patterns/";
                     frame.id = "example_frame";
                     $("pattern_list").appendChild(frame);
 

@@ -1,6 +1,6 @@
 import { initUi } from "./demo_ui.js";
 
-const CLOCK_PERIOD = 11520;
+const CLOCK_PERIOD = 11520 * 2;
 const FULL_DAY_GEN = 24 * 60 * CLOCK_PERIOD;
 var life;
 var drawer;
@@ -34,14 +34,14 @@ function forEachCell(node, x, y, cb) {
         return;
     }
 
-    if (node.level == 1) {
+    if (node.level === 1) {
         forEachCell(node.nw, x - 1, y - 1, cb);
         forEachCell(node.sw, x - 1, y, cb);
         forEachCell(node.ne, x, y - 1, cb);
         forEachCell(node.se, x, y, cb);
         return;
     }
-    var offset = node.level === 1 ? 0 : life.pow2(node.level - 2);
+    var offset = life.pow2(node.level - 2);
 
     forEachCell(node.nw, x - offset, y - offset, cb);
     forEachCell(node.sw, x - offset, y + offset, cb);
@@ -136,16 +136,16 @@ function updateStep(lag) {
     const lagSize = Math.abs(lag);
     smoothedLag = 0.98 * smoothedLag + 0.02 * lagSize;
     if (lagSize <= step * msecsPerGen) {
-        setStep(5);
+        setStep(6);
         smoothedLag = 0;
         skipStepUpdates = 200;
     }
     if (skipStepUpdates <= 0) {
         if (smoothedLag > CLOCK_PERIOD / 12 * msecsPerGen && smoothedLag < 60000) {
-            setStep(6);
+            setStep(7);
             skipStepUpdates = 500;
         } else if (smoothedLag > 60000) {
-            setStep(13);
+            setStep(14);
             skipStepUpdates = 500;
         }
     }
@@ -187,7 +187,7 @@ function run(update_hud_)
     update_hud = update_hud_;
     initUi(clockState);
     start = Date.now();
-    setStep(5);
+    setStep(6);
     nextFrame();
     setInterval(update, 1000 / 12.2);
     update();
