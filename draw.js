@@ -47,7 +47,8 @@ function LifeCanvasDrawer()
     this.center_view = center_view;
     this.zoom_to = zoom_to;
     this.pixel2cell = pixel2cell;
-
+    this.get_image_data = get_image_data;
+    this.get_viewport = get_viewport;
 
 
     function init(dom_parent)
@@ -176,7 +177,7 @@ function LifeCanvasDrawer()
     }
 
 
-    function redraw(node)
+    function redraw(node, dontClear)
     {
         var bg_color_rgb = color2rgb(drawer.background_color);
         var bg_color_int = bg_color_rgb.r | bg_color_rgb.g << 8 | bg_color_rgb.b << 16 | 0xFF << 24;
@@ -187,7 +188,9 @@ function LifeCanvasDrawer()
 
         var count = canvas_width * canvas_height;
 
-       image_data_data.fill(bg_color_int);
+        if (!dontClear) {
+            image_data_data.fill(bg_color_int);
+        }
 
         var size = Math.pow(2, node.level - 1) * drawer.cell_width;
 
@@ -368,6 +371,21 @@ function LifeCanvasDrawer()
                 g: parseInt(color.slice(3, 5), 16),
                 b: parseInt(color.slice(5, 7), 16)
             };
+        }
+    }
+
+    function get_image_data() {
+        return image_data_data;
+    }
+
+    function get_viewport() {
+        var topleft = pixel2cell(0,0);
+        var bottomright = pixel2cell(canvas_width, canvas_height);
+        return {
+            left: topleft.x,
+            top: topleft.y,
+            right: bottomright.x,
+            bottom: bottomright.y
         }
     }
 }

@@ -1,3 +1,4 @@
+import * as lifedebugger from "./lifedebugger.js";
 
 let uiInited = false;
 let mouseActiveTimeout;
@@ -20,6 +21,8 @@ function initUi(clock_) {
     }
     uiInited = true;
 
+    lifedebugger.init(clock.life);
+
     document.addEventListener("mousemove", () => {
         if (noMouseCheckTimout) {
             return;
@@ -37,7 +40,16 @@ function initUi(clock_) {
     byId("auto_button").addEventListener("click", () => {
         clock.toAuto();
         updateUi();
-    })
+    });
+    byId("to_period_break_button").addEventListener("click", runToPeriodBreakHandler);
+}
+
+function runToPeriodBreakHandler() {
+    lifedebugger.runToPeriodBreak(clock.drawer.get_viewport(), function(success) {
+        if (!success) {
+            alert("No period break found");
+        }
+    });
 }
 
 function updateUi() {
