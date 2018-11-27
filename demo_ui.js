@@ -43,6 +43,7 @@ function initUi(clock_) {
     });
     byId("to_period_break_button").addEventListener("click", runToPeriodBreakHandler);
     byId("stop_run_to_signal").addEventListener("click", stopRunToPeriodBreakHandler);
+    byId("about_close").addEventListener("click", () => byId("overlay").style.display="none")
 }
 
 function runToPeriodBreakHandler() {
