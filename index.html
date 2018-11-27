@@ -17,12 +17,12 @@
     <div class="button right" id="about_button">About</div>
     <div class="controls auto">
         <button id="manual_button" class="auto_control">Manual speed</button>
-        <button id="auto_button" class="manual_control">Restart clock</button>
+        <button id="auto_button" class="manual_control debug_norun">Restart clock</button>
 
         <div class="manual_control">
-            <button class="table" id="normalspeed_button">1</button>
-            <button class="table" id="slower_button">&#171;</button>
-            <button class="table" id="faster_button">&#187;</button>
+            <button class="table debug_norun" id="normalspeed_button">1</button>
+            <button class="table debug_norun" id="slower_button">&#171;</button>
+            <button class="table debug_norun" id="faster_button">&#187;</button>
         </div>
         <div>
             <button class="table" id="initial_pos_button">F</button>
@@ -46,8 +46,16 @@
             <button class="table" id="se_button">&#8600;</button>
         </div>
 
-        <div class="manual_control">
-            <button id="to_period_break_button">Run to period break</button>
+        <div class="manual_control debug_controls">
+            <button id="to_period_break_button" class="debug_norun">Run to signal</button>
+            <div>
+                <label for="debugger_step">Step (log)</label>
+                <input type="number" name="debugger_step" id="debugger_step" class="debug_norun" min="0" max="16" value="6"/>
+            </div>
+            <div class="debug_run">
+                <span id="debugger_helper"></span>
+                <button id="stop_run_to_signal">Stop</button>
+            </div>
         </div>
     </div>
 </div>
@@ -213,7 +221,6 @@
         </div>
     </div>
 </div>
-<div id="debugger_helper" style="display:block;position:fixed;top:0;left:0;z-index:1000"></div>
 <script>document.getElementById("overlay").style.display = "none"</script>
 </body>
 </html>

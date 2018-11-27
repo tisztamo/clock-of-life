@@ -13,7 +13,7 @@ function init(life_, period_ = 30) {
     helperDrawer.border_width = 0;
     helperDrawer.cell_width = 1;
 
-    helperDrawer.set_size(30, 30);
+    helperDrawer.set_size(32, 24);
 }
 
 function collectPeriod(viewport) {
@@ -26,8 +26,13 @@ function collectPeriod(viewport) {
     return helperDrawer.get_image_data().slice(0);
 }
 
-function runToPeriodBreak(viewport, callback, step = 6) {
+function stop() {
     clearInterval(intervalId);
+    intervalId = -1;
+}
+
+function runToPeriodBreak(viewport, callback, step = 6) {
+    stop();
     const periodBitmap = collectPeriod(viewport);
     life.set_step(step);
     let stepCount = 0;
@@ -37,14 +42,13 @@ function runToPeriodBreak(viewport, callback, step = 6) {
         const bitmap = helperDrawer.get_image_data();
         for (let i = 0; i < bitmap.length; i++) {
             if (bitmap[i] > periodBitmap[i]) {
-                clearInterval(intervalId);
-                intervalId = -1;
+                stop();
                 life.set_step(0);
                 callback(true);
             }
         }
         if (++stepCount > 10000) {
-            clearInterval(intervalId);
+            stop();
             callback(false);
         }
     }
@@ -52,4 +56,8 @@ function runToPeriodBreak(viewport, callback, step = 6) {
     return intervalId;
 }
 
-export { init, runToPeriodBreak }
+function isRunning() {
+    return intervalId !== -1;
+}
+
+export { init, runToPeriodBreak, isRunning, stop }
