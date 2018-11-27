@@ -303,7 +303,7 @@ var
 
         function init_ui()
         {
-            $("about_close").style.display = "inline";
+            //$("about_close").style.display = "inline";
 
             hide_element($("notice"));
             hide_overlay();
