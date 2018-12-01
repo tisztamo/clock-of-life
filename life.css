@@ -271,6 +271,11 @@ button.table {
     display: block;
 }
 
+.debug_controls label {
+    width: 100px;
+    display: inline-block;
+}
+
 #debugger_step {
     width: 38px !important;
 }
@@ -284,4 +289,5 @@ button.table {
     border: 1px solid white;
     color: white;
     background: rgba(0,0,0, 0.5);
+    padding: 3px;
 }
