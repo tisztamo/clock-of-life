@@ -1,3 +1,4 @@
+import * as lifedebugger from "./lifedebugger.js";
 
 let uiInited = false;
 let mouseActiveTimeout;
@@ -20,6 +21,8 @@ function initUi(clock_) {
     }
     uiInited = true;
 
+    lifedebugger.init(clock.life);
+
     document.addEventListener("mousemove", () => {
         if (noMouseCheckTimout) {
             return;
@@ -37,13 +40,35 @@ function initUi(clock_) {
     byId("auto_button").addEventListener("click", () => {
         clock.toAuto();
         updateUi();
-    })
+    });
+    byId("to_period_break_button").addEventListener("click", runToPeriodBreakHandler);
+    byId("stop_run_to_signal").addEventListener("click", stopRunToPeriodBreakHandler);
+    byId("about_close").addEventListener("click", () => byId("overlay").style.display="none")
+}
+
+function runToPeriodBreakHandler() {
+    lifedebugger.runToPeriodBreak(clock.drawer.get_viewport(), function(success) {
+        if (!success) {
+            alert("No signal found");
+        }
+        updateUi();
+    }, Number(byId("debugger_step").value));
+    updateUi();
+}
+
+function stopRunToPeriodBreakHandler() {
+    lifedebugger.stop();
+    updateUi();
 }
 
 function updateUi() {
     byClass("controls").forEach(control => {
-        ["auto", "manual"].forEach(mode => control.classList.remove(mode));
+        ["auto", "manual", "debugging"].forEach(mode => control.classList.remove(mode));
         control.classList.add(clock.mode);
+        lifedebugger.isRunning() && control.classList.add("debugging");
+    })
+    byClass("debug_norun").forEach(input => {
+        input.disabled = lifedebugger.isRunning() ? "disabled" : "";
     })
 }
 

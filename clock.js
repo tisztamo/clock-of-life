@@ -2,12 +2,14 @@ import { initUi } from "./demo_ui.js";
 
 const CLOCK_PERIOD = 11520 * 2;
 const FULL_DAY_GEN = 24 * 60 * CLOCK_PERIOD;
-var life;
 var drawer;
+var life;
 var setup_pattern;
 
 var clockState = {
     mode: "auto",
+    life: null,
+    drawer: null,
 
     toManual: function() {
         this.mode = "manual";
@@ -20,8 +22,8 @@ var clockState = {
 }
 
 function init(_life, _drawer, _setup_pattern) {
-    life = _life;
-    drawer = _drawer;
+    clockState.life = life = _life;
+    clockState.drawer = drawer = _drawer;
     setup_pattern = _setup_pattern;
 }
 

@@ -132,7 +132,7 @@ var
             life.set_step(step_parameter);
         }
 
-        let pattern_parameter = parameters["pattern"];
+        let pattern_parameter = parameters["pattern"] || "halfspeed_original";
         let pattern_parameter_looks_good = pattern_parameter && /^[a-z0-9_\.\-]+$/i.test(pattern_parameter);
 
         let gist = parameters["gist"];
@@ -303,7 +303,7 @@ var
 
         function init_ui()
         {
-            $("about_close").style.display = "inline";
+            //$("about_close").style.display = "inline";
 
             hide_element($("notice"));
             hide_overlay();
