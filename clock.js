@@ -120,7 +120,7 @@ function calculateTargetGen() {
 
 var gc_counter = 0;
 function leakWorkaround() {
-    if (++gc_counter > 50000) {
+    if (++gc_counter > 30000) {
         gc_counter = 0;
         clearHash();
     };
@@ -170,13 +170,15 @@ function update()
     const time = Date.now();
     calculateTargetGen();
     const lag = (targetGen - currentGen) * msecsPerGen;
-    if (lag > 10 || lag < -90000) {
+    if (lag > -16 || lag < -90000) {
+	requestAnimationFrame(function() {
+            drawer.redraw(life.root);
+            updateFps(time);
+	});
+        leakWorkaround();
         updateStep(lag);
         life.next_generation(true);
         nextFrame();
-        drawer.redraw(life.root);
-        updateFps(time);
-        leakWorkaround();
     }
 }
 
