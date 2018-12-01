@@ -33,7 +33,6 @@ I run it on a Raspberry Pi 3 Model B using Chromium kiosk mode.
 On a low-end device like the rpi you have to configure the JavaScript heap with command line flags.
 Use clock.sh to start the browser.  
 
-
 ### TODOs
 
 - Allow editing and provide usable editor tools and a better debugger
