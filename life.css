@@ -275,6 +275,10 @@ button.table {
     width: 38px !important;
 }
 
+#debugger_period {
+    width: 46px !important;
+}
+
 .debug_controls {
     margin-top: 10px;
     border: 1px solid white;

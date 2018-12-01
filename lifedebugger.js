@@ -1,10 +1,8 @@
 var helperDrawer = new LifeCanvasDrawer();
 var life;
-var period;
 let intervalId = -1;
 
-function init(life_, period_ = 30) {
-    period = period_;
+function init(life_) {
     life = life_;
     helperDrawer.init(document.getElementById("debugger_helper"));
     helperDrawer.background_color = "#000000";
@@ -16,10 +14,10 @@ function init(life_, period_ = 30) {
     helperDrawer.set_size(32, 24);
 }
 
-function collectPeriod(viewport) {
+function collectPeriod(viewport, periodLength) {
     life.set_step(0);
     helperDrawer.fit_bounds(viewport);
-    for (let i = 0; i < period; i++) {
+    for (let i = 0; i < periodLength; i++) {
         helperDrawer.redraw(life.root, i !== 0);
         life.next_generation(true);
     }
@@ -29,11 +27,12 @@ function collectPeriod(viewport) {
 function stop() {
     clearInterval(intervalId);
     intervalId = -1;
+    life.set_step(0);
 }
 
-function runToPeriodBreak(viewport, callback, step = 6) {
+function runToPeriodBreak(viewport, callback, step=6, period=30) {
     stop();
-    const periodBitmap = collectPeriod(viewport);
+    const periodBitmap = collectPeriod(viewport, period);
     life.set_step(step);
     let stepCount = 0;
     function checkNextGeneration() {

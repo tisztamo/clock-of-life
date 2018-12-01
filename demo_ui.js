@@ -52,7 +52,8 @@ function runToPeriodBreakHandler() {
             alert("No signal found");
         }
         updateUi();
-    }, Number(byId("debugger_step").value));
+    }, Number(byId("debugger_step").value)
+     , Number(byId("debugger_period").value));
     updateUi();
 }
 
