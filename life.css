@@ -259,3 +259,35 @@ button {
 button.table {
     width: 25px;
 }
+
+#debugger_helper canvas {
+    position: static;
+}
+
+.debug_run {
+    display: none;
+}
+.controls.debugging .debug_run {
+    display: block;
+}
+
+.debug_controls label {
+    width: 100px;
+    display: inline-block;
+}
+
+#debugger_step {
+    width: 38px !important;
+}
+
+#debugger_period {
+    width: 46px !important;
+}
+
+.debug_controls {
+    margin-top: 10px;
+    border: 1px solid white;
+    color: white;
+    background: rgba(0,0,0, 0.5);
+    padding: 3px;
+}
