@@ -43,6 +43,7 @@ function initUi(clock_) {
     });
     byId("to_period_break_button").addEventListener("click", runToPeriodBreakHandler);
     byId("about_close").addEventListener("click", () => byId("overlay").style.display="none")
+    document.title="Clock Of Life";
 }
 
 function runToPeriodBreakHandler() {
