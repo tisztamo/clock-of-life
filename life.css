@@ -184,7 +184,7 @@ a:hover, .link:hover {
 }
 body > canvas {
     position: absolute;
-    transform: scale(2);
+    transform: translate(100px, 0) scale(2, 1.6);
     transform-origin: top left;
 }
 #pattern_chooser > div {
