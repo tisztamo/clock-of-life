@@ -103,7 +103,8 @@ var
 
         init_ui();
 
-        drawer.set_size(window.innerWidth, document.body.offsetHeight);
+        //drawer.set_size(window.innerWidth, document.body.offsetHeight);
+        drawer.set_size(714, 600);
         reset_settings();
 
         // This gets called, when a pattern is loaded.
@@ -317,7 +318,7 @@ var
 
             window.onresize = debounce(function()
             {
-                drawer.set_size(window.innerWidth, document.body.offsetHeight);
+                //drawer.set_size(window.innerWidth, document.body.offsetHeight);
 
                 requestAnimationFrame(lazy_redraw.bind(0, life.root));
             }, 500);

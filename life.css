@@ -182,8 +182,10 @@ a:hover, .link:hover {
     max-height: 300px;
     overflow: auto;
 }
-canvas {
+body > canvas {
     position: absolute;
+    transform: scale(2);
+    transform-origin: top left;
 }
 #pattern_chooser > div {
     height: 500px;
