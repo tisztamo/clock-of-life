@@ -173,13 +173,11 @@ function update()
     calculateTargetGen();
     const lag = (targetGen - currentGen) * msecsPerGen;
     if (lag > -16 || lag < -90000) {
-	requestAnimationFrame(function() {
-            drawer.redraw(life.root);
-            updateFps(time);
-	});
         leakWorkaround();
         updateStep(lag);
         life.next_generation(true);
+        drawer.redraw(life.root);
+        updateFps(time);
         nextFrame();
     }
 }
