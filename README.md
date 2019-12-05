@@ -8,11 +8,10 @@ Game of Life</a>. You can run it on a Raspberry Pi 3 or similar.
 
 The clock speed is 23000 steps/min, so if you switch to manual mode to discover the
 inner workings of the clockwork, you often have to wait a lot for the next signal glider to arrive.
-It is possible to speed up the simulation but then you need to be quick to stop it at the right moment. It can be
-painful.
+It is possible to speed up the simulation in manual mode (default is 12 steps/sec) but then you need to be quick to stop it at the right moment. It can be painful.
 
 To address the issue I have developed an experimental debugger which looks for moments of "period breaks".
-To use it zoom to a small which processes a sparse signal and press to "Run to Signal" button.
+To use it zoom to a small area which processes a sparse signal and press to "Run to Signal" button.
  
 
 - The debugger draws the first *period* generations onto a small canvas without clearing it between them, this way collecting
