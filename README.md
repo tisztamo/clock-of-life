@@ -11,18 +11,18 @@ inner workings of the clockwork, you often have to wait a lot for the next signa
 It is possible to speed up the simulation in manual mode (default is 12 steps/sec) but then you need to be quick to stop it at the right moment. It can be painful.
 
 To address the issue I have developed an experimental debugger which looks for moments of "period breaks".
-To use it zoom to a small area which processes a sparse signal and press to "Run to Signal" button.
+To use it zoom to a small area which processes a sparse signal and press "Run to Signal".
  
 
-- The debugger draws the first *period* generations onto a small canvas without clearing it between them, this way collecting
+- The debugger draws the first *[period]* generations onto a small canvas without clearing it between them, this way collecting
 a snapshot of all the cells that are active during normal periodic work.
 - Then it switches to high speed by drawing only every 2^*step* generations. Thanks to the Hashlife algorithm the simulation is very fast when the inner generations are not rendered.
-- For every drawn generation it checks if there is any live cell which is not marked in the snapshot.
-If it finds one that must be part of the signal 
+- For every drawn generation it checks if there is any live cell which is not marked in the accumulated snapshot.
+When it finds one, that must be part of the signal 
 
 You may need to tune the parameters: Use higher *step* if you are working with the hour or AM/PM displays,
 and enter a high enough *period* if the debugger stops immediately without finding a signal. Don't forget to
-zoom in to a small area as the larger ones are not periodic and the canvas used to collect the snapshot is small.  
+zoom in to a small area, as the larger ones are not periodic and also the canvas used to collect the snapshot is small.  
 
 ### Embedding
 
